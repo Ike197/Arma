@@ -1,0 +1,5 @@
+Armas:
+  pistola:
+    Name: '&c&lPistola'
+    Fuerza: 5
+    Max: 12
