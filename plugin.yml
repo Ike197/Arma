@@ -1,0 +1,7 @@
+main: me.armas.M
+name: Armas 
+version: 1.0
+author: Ike197
+api-version: 1.13
+commands:
+    arma:
