@@ -16,9 +16,9 @@ import me.armas.gui.EditGui;
 
 public class ArmasListener implements Listener {
 
-	public final String PREFIX = "Armas.";
-	public final String NAME_SUFFIX = ".Name";
-	public final String EDIT_PREFIX = "§cEdit ";
+	public static final String PREFIX = "Armas.";
+	public static final String NAME_SUFFIX = ".Name";
+	public static final String EDIT_PREFIX = "§cEdit ";
 
 	private ArrayList<Player> cna = new ArrayList<>();
 
@@ -34,7 +34,8 @@ public class ArmasListener implements Listener {
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
 		if (cna.contains(p)) {
-			ArmasPlugin.get().getConfig().set(PREFIX + ConfigurationGui.t.get(p) + NAME_SUFFIX, e.getMessage());
+			ArmasPlugin.get().getConfig().set(PREFIX + ConfigurationGui.getHashmap().get(p) + NAME_SUFFIX,
+					e.getMessage());
 			ArmasPlugin.get().saveConfig();
 			e.setCancelled(true);
 			cna.remove(p);
@@ -73,14 +74,15 @@ public class ArmasListener implements Listener {
 				}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(ArmasPlugin.get(), () -> {
 					ConfigurationGui.configuraciongui(p, key);
-					ConfigurationGui.t.put(p, key);
+					ConfigurationGui.getHashmap().put(p, key);
 				}, 20);
 			}
 			e.setCancelled(true);
 		} else if (p.getOpenInventory().getTitle().equals(EDIT_PREFIX
-				+ ArmasPlugin.get().getConfig().getString(PREFIX + ConfigurationGui.t.get(p) + NAME_SUFFIX).replace(
-						"&",
-						"§"))) {
+				+ ArmasPlugin.get().getConfig().getString(PREFIX + ConfigurationGui.getHashmap().get(p) + NAME_SUFFIX)
+						.replace(
+								"&",
+								"§"))) {
 			switch (slot) {
 				case 1:
 					cna.add(p);
@@ -88,21 +90,21 @@ public class ArmasListener implements Listener {
 					p.sendMessage("§a§lSelecciona el nombre del arma.");
 					break;
 				case 2:
-					ConfigurationGui.fuerzaedit(p, ConfigurationGui.t.get(p));
+					ConfigurationGui.fuerzaedit(p, ConfigurationGui.getHashmap().get(p));
 					break;
 				case 4:
-					ConfigurationGui.maxedit(p, ConfigurationGui.t.get(p));
+					ConfigurationGui.maxedit(p, ConfigurationGui.getHashmap().get(p));
 					break;
 				case 6:
-					ArmasPlugin.get().getApi().removePistola(ConfigurationGui.t.get(p));
-					p.sendMessage("§cHas borrado el arma " + ConfigurationGui.t.get(p) + " correctamente.");
+					ArmasPlugin.get().getApi().removePistola(ConfigurationGui.getHashmap().get(p));
+					p.sendMessage("§cHas borrado el arma " + ConfigurationGui.getHashmap().get(p) + " correctamente.");
 					Bukkit.getConsoleSender().sendMessage(
-							"§cEl arma " + ConfigurationGui.t.get(p) + " ha sido eliminada por el jugador "
+							"§cEl arma " + ConfigurationGui.getHashmap().get(p) + " ha sido eliminada por el jugador "
 									+ p.getName());
 					p.closeInventory();
 					break;
 				case 7:
-					ArmasPlugin.get().getApi().getPistola(ConfigurationGui.t.get(p), p);
+					ArmasPlugin.get().getApi().getPistola(ConfigurationGui.getHashmap().get(p), p);
 					p.closeInventory();
 					break;
 				case 8:
@@ -114,22 +116,25 @@ public class ArmasListener implements Listener {
 			e.setCancelled(true);
 		} else {
 			if (slot == 8) {
-				ConfigurationGui.configuraciongui(p, ConfigurationGui.t.get(p));
+				ConfigurationGui.configuraciongui(p, ConfigurationGui.getHashmap().get(p));
 			} else {
 				int sum = getSumFromSlot(slot);
-				ArmasPlugin.get().getConfig().set(PREFIX + ConfigurationGui.t.get(p) + ".Max",
-						ArmasPlugin.get().getConfig().getInt(PREFIX + ConfigurationGui.t.get(p) + ".Max") + sum);
+				ArmasPlugin.get().getConfig().set(PREFIX + ConfigurationGui.getHashmap().get(p) + ".Max",
+						ArmasPlugin.get().getConfig().getInt(PREFIX + ConfigurationGui.getHashmap().get(p) + ".Max")
+								+ sum);
 				ArmasPlugin.get().saveConfig();
 				if (p.getOpenInventory().getTitle().equals(EDIT_PREFIX
-						+ ArmasPlugin.get().getConfig().getString(PREFIX + ConfigurationGui.t.get(p) + NAME_SUFFIX)
+						+ ArmasPlugin.get().getConfig()
+								.getString(PREFIX + ConfigurationGui.getHashmap().get(p) + NAME_SUFFIX)
 								.replace("&", "§")
 						+ " Max")) {
-					ConfigurationGui.fuerzaedit(p, ConfigurationGui.t.get(p));
+					ConfigurationGui.fuerzaedit(p, ConfigurationGui.getHashmap().get(p));
 				} else if (p.getOpenInventory().getTitle().equals(EDIT_PREFIX
-						+ ArmasPlugin.get().getConfig().getString(PREFIX + ConfigurationGui.t.get(p) + NAME_SUFFIX)
+						+ ArmasPlugin.get().getConfig()
+								.getString(PREFIX + ConfigurationGui.getHashmap().get(p) + NAME_SUFFIX)
 								.replace("&", "§")
 						+ " Fuerza")) {
-					ConfigurationGui.maxedit(p, ConfigurationGui.t.get(p));
+					ConfigurationGui.maxedit(p, ConfigurationGui.getHashmap().get(p));
 				}
 			}
 			e.setCancelled(true);
